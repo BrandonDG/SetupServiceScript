@@ -1,0 +1,6 @@
+#!/bin/bash
+#dnf install samba
+cp /etc/samba/smb.conf /etc/samba/smb.conf.copy
+echo -e "[$1]\n\tcomment = 'Samba Server'\n\tpath = /home/nfserver\n\tpublic = yes\n\twritable = yes\n\tprintable = no" >> /etc/samba/smb.conf
+smbpasswd -a $1
+systemctl restart smb

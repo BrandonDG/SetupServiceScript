@@ -1,0 +1,20 @@
+#!/bin/bash
+#useradd httpdserver
+#passwd httpdserver
+httpdserver=$1
+sudo -u ${httpdserver} mkdir /home/${httpdserver}/public_html
+sudo -u ${httpdserver} touch /home/${httpdserver}/public_html/index.html
+sudo -u ${httpdserver} chmod 711 /home/${httpdserver}
+sudo -u ${httpdserver} chmod 755 /home/${httpdserver}/public_html
+sudo -u ${httpdserver} chmod 777 /home/${httpdserver}/public_html/index.html
+echo Hello World >> /home/${httpdserver}/public_html/index.html
+cp /etc/httpd/conf.d/userdir.conf /etc/httpd/conf.d/userdir.conf.copy
+sed -i 's/UserDir disable/#UserDir disable/g' /etc/httpd/conf.d/userdir.conf
+sed -i 's/#UserDir public_html/UserDir public_html/g' /etc/httpd/conf.d/userdir.conf
+sed -i '/^<Directory \"/,+4 s/^#*/#/' /etc/httpd/conf.d/userdir.conf
+echo -e "<Directory /home/httpdserver>\n\tAllowOverride None\n\tAuthUserFile /var/www/html/passwords/httpdserver\n\tAuthGroupFile /dev/null\n\tAuthName course_index\n\tAuthType Basic\n\t<Limit GET>\n\t require valid-user\n\t order deny,allow\n\t deny from all\n\t allow from all\n\t</Limit>\n</Directory>" >> /etc/httpd/conf.d/userdir.conf
+echo -e "<Directory /var/www/html/passwords>\n\torder deny,allow\n\tdeny from all\n</Directory>" >> /etc/httpd/conf.d/userdir.conf
+mkdir /var/www/html/passwords
+chmod 755 /var/www/html/passwords
+htpasswd -c webserver httpdserver
+systemctl restart httpd

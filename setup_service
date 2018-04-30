@@ -1,0 +1,27 @@
+#!/bin/bash
+echo -e "Select service:\n1 = httpd\n2 = nfs\n3 = smb"
+read selected
+#case $selected in
+#	1) echo "httpd";;
+#	2) echo "nfs";;
+#	3) echo "smb";;
+#esac
+echo -e "Select:\n1 = Supply Account\n2 = Create Account"
+read sup_acc_c
+case $sup_acc_c in
+	1) echo "Account Name: "
+	   read sup_acc_n;;
+	2) echo "Account Name: "
+	   read sup_acc_n
+	   useradd $sup_acc_n
+	   passwd $sup_acc_n;;
+esac
+case $selected in
+        1) echo "httpd"
+	   httpd/setup_httpd $sup_acc_n;;
+        2) echo "nfs"
+	   nfs/setup_nfs $sup_acc_n;;
+        3) echo "smb"
+	   smb/setup_smb $sup_acc_n;;
+esac
+

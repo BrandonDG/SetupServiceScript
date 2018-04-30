@@ -1,0 +1,4 @@
+#!/bin/bash
+userdel -r $1
+mv /etc/httpd/conf.d/userdir.conf.copy /etc/httpd/conf.d/userdir.conf
+rm -rf /var/www/html/passwords

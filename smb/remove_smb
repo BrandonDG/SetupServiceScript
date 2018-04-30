@@ -1,0 +1,2 @@
+#!/bin/bash
+mv /etc/samba/smb.conf.copy /etc/samba/smb.conf
